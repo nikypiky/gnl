@@ -9,7 +9,7 @@ int	main(void)
 	char	*s;
 	
 	file = open("test.txt", O_RDWR);
-	for (i = 0; i < 1; i++)
+	for (i = 0; i < 4; i++)
 	{
 		s = get_next_line(file);
 		printf("%s", s);

@@ -29,8 +29,8 @@ fclean: clean
 re: fclean all
 
 run:
-	@cc $(CmpFlags) -c main.c -o main.o -g
-	@cc $(CmpFlags) -o main main.o -L.  -g $(NAME) 
+	@cc $(CmpFlags) -c main.c -o main.o -g -D BUFFER_SIZE=350
+	@cc $(CmpFlags) -o main main.o -L.  -g $(NAME)
 	@./main
 	@echo
 
