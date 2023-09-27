@@ -1,19 +1,25 @@
 #include <stdio.h>
 #include <fcntl.h>
+#include <string.h>
 #include "gnl.h"
 
 int	main(void)
 {
 	int		file;
-	int		i;
+	/* int		i; */
 	char	*s;
 	
 	file = open("test.txt", O_RDWR);
-	for (i = 0; i < 4; i++)
+	while ((s = get_next_line(file)) != NULL)
 	{
-		s = get_next_line(file);
 		printf("%s", s);
 		free (s);
 	}
+	/* for (i = 0; i < 9; i++) */
+	/* { */
+	/* 	s = get_next_line(file); */
+	/* 	printf("%s", s); */
+	/* 	free (s); */
+	/* } */
 	close(file);
 }

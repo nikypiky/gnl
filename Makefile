@@ -14,10 +14,12 @@ OFILES	= $(files:%=%.o)
 
 NAME	= $(OUTN)
 
+BUFFER	= BUFFER_SIZE=10000000
+
 all: $(NAME) run
 
 $(NAME):
-	@$(Compiler) $(CmpFlags) -c $(CFILES) -I./ -g 
+	@$(Compiler) $(CmpFlags) -c $(CFILES) -I./ -g3 -D $(BUFFER)
 	@ar -rc $(OUTN) $(OFILES)
 
 clean:
@@ -29,8 +31,8 @@ fclean: clean
 re: fclean all
 
 run:
-	@cc $(CmpFlags) -c main.c -o main.o -g -D BUFFER_SIZE=350
-	@cc $(CmpFlags) -o main main.o -L.  -g $(NAME)
+	@cc $(CmpFlags) -c main.c -o main.o -g3 -D $(BUFFER)
+	@cc $(CmpFlags) -o main main.o -L.  -g3 $(NAME)
 	@./main
 	@echo
 
