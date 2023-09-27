@@ -1,2 +1,4 @@
-write test 1s a 
-test:
+zuf1
+tuf2
+xuf3
+buf4

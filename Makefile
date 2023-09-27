@@ -1,4 +1,4 @@
-Library		= get_next_line
+Library		= gnl
 
 files 	   = get_next_line \
 			get_next_line_utils
@@ -17,7 +17,7 @@ NAME	= $(OUTN)
 all: $(NAME) run
 
 $(NAME):
-	@$(Compiler) $(CmpFlags) -c $(CFILES) -I./
+	@$(Compiler) $(CmpFlags) -c $(CFILES) -I./ -g 
 	@ar -rc $(OUTN) $(OFILES)
 
 clean:
@@ -29,8 +29,8 @@ fclean: clean
 re: fclean all
 
 run:
-	@cc $(CmpFlags) -c main.c -o main.o 
-	@cc $(CmpFlags) -o main main.o -L. $(NAME)
+	@cc $(CmpFlags) -c main.c -o main.o -g
+	@cc $(CmpFlags) -o main main.o -L.  -g $(NAME) 
 	@./main
 	@echo
 
