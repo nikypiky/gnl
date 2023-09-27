@@ -14,7 +14,7 @@ OFILES	= $(files:%=%.o)
 
 NAME	= $(OUTN)
 
-BUFFER	= BUFFER_SIZE=10000000
+BUFFER	= BUFFER_SIZE=3000
 
 all: $(NAME) run
 
