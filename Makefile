@@ -1,7 +1,8 @@
 Library		= get_next_line
 
 files 	   = get_next_line \
-			get_next_line_utils
+			get_next_line_utils\
+			alt_get_next_line\
 
 Compiler	= cc
 

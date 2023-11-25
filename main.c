@@ -10,13 +10,14 @@ int	main(void)
 	char	*s;
 
 	file = open("test.txt", O_RDWR);
-	while ((s = get_next_line(1000)) != NULL)
+	/* i = read(file, s, 0); */
+	while ((s = get_next_line(file)) != NULL)
 	{
 		printf("%s", s);
 		free (s);
 		i++;
 	}
-	printf("\ni=%i buffer=%i", i, BUFFER_SIZE);
+	printf("\ni=%i s=%s", i, s);
 	free (s);
 	close(file);
 }
