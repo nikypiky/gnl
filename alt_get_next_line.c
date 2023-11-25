@@ -5,12 +5,12 @@ int	descriptor_test(int fd, char *buf)
 	int	i;
 
 	i = (read(fd, buf, 0));
-	if (i <= 0)
+	if (i < 0)
 		free (buf);
 	return(i);
 }
 
-int line_len(char *buf)
+int get_line_len(char *buf)
 {
 	size_t	i;
 
@@ -22,21 +22,17 @@ int line_len(char *buf)
 
 char	*alt_get_next_line(int fd)
 {
-	char	*buf;
-	int		i;
+	static char	*buf;
+	int			i;
+	int			buf_len;
+	int			line_len;
 
 	i = 0;
-	buf = (char *)malloc(sizeof(char) * BUFFER_SIZE);
-	if (!buf)
+	buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!buf || descriptor_test(fd, buf) <= 0)
 		return (NULL);
-	if (descriptor_test(fd, buf) <= 0)
-		return (NULL);
-	while (i < BUFFER_SIZE - 1 && buf[i - 1] != '\n')
-	{
-		if (read(fd, buf + i, 1) == 0)
-			return (buf);
-		i++;
-	}
-	buf[i] = 0;
+	buf_len = read(fd, buf, BUFFER_SIZE);
+	line_len = get_line_len(buf);
+	buf[BUFFER_SIZE + 1] = 0;
 	return(buf);
 }
