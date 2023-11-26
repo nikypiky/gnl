@@ -1,4 +1,5 @@
 #include "get_next_line.h"
+#include <stdlib.h>
 
 int	descriptor_test(int fd, char *buf)
 {
@@ -15,9 +16,21 @@ int get_line_len(char *buf)
 	size_t	i;
 
 	i = 0;
-	while (c[i] != '/n')
+	while (buf[i] != '/n' && i < BUFFER_SIZE)
 		i++;
 	return (i);
+}
+
+char	write_line(int fd, char *buf, char *line_total, int line_len_total)
+{
+	char	*line;
+	int		buf_len;
+	int		line_len;
+
+	buf_len = read(fd, buf, BUFFER_SIZE);
+	line_len = get_line_len(buf);
+	line = (char)malloc(sizeof(char) * (line_len_total + line_len))
+
 }
 
 char	*alt_get_next_line(int fd)
