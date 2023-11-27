@@ -19,7 +19,7 @@ int get_line_len(char *buf)
 	i = 0;
 	while (buf[i] != '\n' && i < BUFFER_SIZE)
 		i++;
-	return (i + 1);
+	return (i);
 }
 
 size_t	line_cat(char *dest, char *src, size_t line_len_total, size_t line_len)
@@ -66,20 +66,24 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 	buf_len = read(fd, buf, BUFFER_SIZE);
 	line_len = get_line_len(buf);
 	line = (char *)malloc(sizeof(char) * (line_len_total + line_len));
-	line_cat(line, line_total, line_len_total, 0);
+	line_cat(line, line_total, 0, line_len_total);
 	line_cat(line, buf, line_len_total, line_len);
+	free(line_total);
 	if (buf_len > line_len)
+	{
 		line_move(buf, line_len, buf_len);
-	return (line);
+		return (line);
+	}
+	return (write_line(fd, buf, line, (line_len_total + line_len)));
 }
 
 char	*alt_get_next_line(int fd)
 {
 	static char	*buf;
 	char		*line;
-	/* size_t	i; */
 	size_t		line_len;
 
+	line = NULL;
 	if (!buf)
 		buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buf || alt_descriptor_test(fd, buf) == -1)
