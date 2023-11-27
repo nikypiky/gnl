@@ -6,7 +6,7 @@ files 	   = get_next_line \
 
 Compiler	= cc
 
-CmpFlags	= -Wall -Wextra -Werror
+CmpFlags	=
 
 NAME	= $(Library).a
 

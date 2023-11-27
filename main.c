@@ -13,14 +13,13 @@ int	main(void)
 
 	file = open("test.txt", O_RDWR);
 	/* i = read(file, s, 0); */
-	line_cat(x, y, 6, 0);
-	while ((s = get_next_line(file)) != NULL)
+	line_cat(x, y, 0, 6);
+	while (i < 2)
 	{
+		s = alt_get_next_line(file);
 		printf("%s", s);
 		free (s);
 		i++;
 	}
-	printf("\ni=%i s=%s", i, x);
-	free (s);
 	close(file);
 }
