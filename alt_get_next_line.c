@@ -23,28 +23,12 @@ size_t	ft_strlen(const char *c)
 	return (i);
 }
 
-void	*ft_memchr(const void *s, int c, size_t n)
-{
-	size_t	i;
-	char	*str;
-
-	str = (char *)s;
-	i = 0;
-	while (i < n)
-	{
-		if (str[i] == c)
-			return (&str[i]);
-		i++;
-	}
-	return (NULL);
-}
-
 int get_line_len(char *buf)
 {
 	size_t	i;
 
 	i = 0;
-	while (buf[i] != '\n' && i < BUFFER_SIZE)
+	while ((buf[i] != '\n' && i < BUFFER_SIZE) && buf[i] != 0)
 		i++;
 	return (i);
 }
@@ -53,6 +37,7 @@ size_t	line_cat(char *dest, char *src, size_t line_len_total, size_t line_len)
 {
 	size_t	lens;
 	size_t	i;
+	size_t	j;
 
 	lens = 0;
 	i = 0;
@@ -61,9 +46,9 @@ size_t	line_cat(char *dest, char *src, size_t line_len_total, size_t line_len)
 		dest++;
 		lens++;
 	}
-	while (i < line_len && *src != '\n')
+	while (i <= line_len)// && *src != '\n')
 	{
-		*dest++ = *src++;
+		*dest = *src++;
 		lens++;
 		i++;
 	}
@@ -84,7 +69,7 @@ void	line_move(char *buf, int line_len, int buf_len)
 	buf[i] = 0;
 }
 
-char	*buf_not_empty(char *buf, char *line)
+char	*buf_not_full(char *buf, char *line)
 {
 	size_t	line_len;
 
@@ -93,6 +78,7 @@ char	*buf_not_empty(char *buf, char *line)
 	if (!line)
 		return (NULL);
 	line_cat(line, buf, 0, line_len);
+	line_move(buf, line_len, ft_strlen(buf));
 	return (line);
 }
 
@@ -102,17 +88,28 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 	size_t		buf_len;
 	size_t		line_len;
 
-	printf(" strlen = %li\n", ft_strlen(buf));
-	if (ft_strlen(buf) < BUFFER_SIZE && ft_strlen(buf) != 0)
-		line = buf_not_empty(buf, line);
-	buf_len = read(fd, buf, BUFFER_SIZE);
-	line_len = get_line_len(buf);
-	line = (char *)malloc(sizeof(char) * (line_len_total + line_len));
-	if (!line)
-		return (NULL);
-	line_cat(line, line_total, 0, line_len_total);
-	line_cat(line, buf, line_len_total, line_len + 1);
-	free(line_total);
+	buf_len = ft_strlen(buf);
+	line = NULL;
+	if (buf_len < BUFFER_SIZE && buf_len != 0)
+	{
+		line = buf_not_full(buf, line);
+		line_len = get_line_len(line);
+	}
+	else
+	{
+		buf_len = read(fd, buf, BUFFER_SIZE);
+		line_len = get_line_len(buf);
+		line = (char *)malloc(sizeof(char) * (line_len_total + line_len));
+		if (!line)
+			return (NULL);
+		line_cat(line, line_total, 0, line_len_total);
+		line_cat(line, buf, line_len_total, line_len);
+	}
+	if (line_total)
+	{
+		free (line_total);
+		line_total = NULL;
+	}
 	if (buf_len > line_len)
 	{
 		line_move(buf, line_len, buf_len + 1);
