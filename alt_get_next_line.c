@@ -1,6 +1,8 @@
 #include "get_next_line.h"
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int	alt_descriptor_test(int fd, char *buf)
 {
@@ -10,6 +12,31 @@ int	alt_descriptor_test(int fd, char *buf)
 	if (i < 0)
 		free (buf);
 	return(i);
+}
+size_t	ft_strlen(const char *c)
+{
+	size_t	i;
+
+	i = 0;
+	while (c[i] != 0)
+		i++;
+	return (i);
+}
+
+void	*ft_memchr(const void *s, int c, size_t n)
+{
+	size_t	i;
+	char	*str;
+
+	str = (char *)s;
+	i = 0;
+	while (i < n)
+	{
+		if (str[i] == c)
+			return (&str[i]);
+		i++;
+	}
+	return (NULL);
 }
 
 int get_line_len(char *buf)
@@ -34,7 +61,7 @@ size_t	line_cat(char *dest, char *src, size_t line_len_total, size_t line_len)
 		dest++;
 		lens++;
 	}
-	while (i < line_len && *dest != '\n')
+	while (i < line_len && *src != '\n')
 	{
 		*dest++ = *src++;
 		lens++;
@@ -54,7 +81,19 @@ void	line_move(char *buf, int line_len, int buf_len)
 		i++;
 		line_len++;
 	}
-	buf[i + 1] = 0;
+	buf[i] = 0;
+}
+
+char	*buf_not_empty(char *buf, char *line)
+{
+	size_t	line_len;
+
+	line_len = get_line_len(buf);
+	line = (char *)malloc(sizeof(char) * line_len);
+	if (!line)
+		return (NULL);
+	line_cat(line, buf, 0, line_len);
+	return (line);
 }
 
 char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
@@ -63,15 +102,20 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 	size_t		buf_len;
 	size_t		line_len;
 
+	printf(" strlen = %li\n", ft_strlen(buf));
+	if (ft_strlen(buf) < BUFFER_SIZE && ft_strlen(buf) != 0)
+		line = buf_not_empty(buf, line);
 	buf_len = read(fd, buf, BUFFER_SIZE);
 	line_len = get_line_len(buf);
 	line = (char *)malloc(sizeof(char) * (line_len_total + line_len));
+	if (!line)
+		return (NULL);
 	line_cat(line, line_total, 0, line_len_total);
-	line_cat(line, buf, line_len_total, line_len);
+	line_cat(line, buf, line_len_total, line_len + 1);
 	free(line_total);
 	if (buf_len > line_len)
 	{
-		line_move(buf, line_len, buf_len);
+		line_move(buf, line_len, buf_len + 1);
 		return (line);
 	}
 	return (write_line(fd, buf, line, (line_len_total + line_len)));
@@ -81,7 +125,7 @@ char	*alt_get_next_line(int fd)
 {
 	static char	*buf;
 	char		*line;
-	size_t		line_len;
+	/* size_t		line_len; */
 
 	line = NULL;
 	if (!buf)

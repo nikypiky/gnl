@@ -6,7 +6,7 @@ files 	   = get_next_line \
 
 Compiler	= cc
 
-CmpFlags	=
+CmpFlags	= -Wall -Wextra -Werror
 
 NAME	= $(Library).a
 
@@ -14,7 +14,7 @@ CFILES	= $(files:%=%.c)
 
 OFILES	= $(files:%=%.o)
 
-BUFFER	= BUFFER_SIZE=3
+BUFFER	= BUFFER_SIZE=20
 
 all: $(NAME) run
 
