@@ -37,7 +37,6 @@ size_t	line_cat(char *dest, char *src, size_t line_len_total, size_t line_len)
 {
 	size_t	lens;
 	size_t	i;
-	size_t	j;
 
 	lens = 0;
 	i = 0;
@@ -48,7 +47,7 @@ size_t	line_cat(char *dest, char *src, size_t line_len_total, size_t line_len)
 	}
 	while (i <= line_len)// && *src != '\n')
 	{
-		*dest = *src++;
+		*dest++ = *src++;
 		lens++;
 		i++;
 	}
@@ -62,7 +61,7 @@ void	line_move(char *buf, int line_len, int buf_len)
 	i = 0;
 	while (line_len < buf_len && buf[i] != '\n')
 	{
-		buf[i] = buf[line_len];
+		buf[i] = buf[line_len + 1];
 		i++;
 		line_len++;
 	}
@@ -102,13 +101,13 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 		line = (char *)malloc(sizeof(char) * (line_len_total + line_len));
 		if (!line)
 			return (NULL);
-		line_cat(line, line_total, 0, line_len_total);
+		if (line_total)
+		{
+			line_cat(line, line_total, 0, line_len_total);
+			free (line_total);
+			line_total = NULL;
+		}
 		line_cat(line, buf, line_len_total, line_len);
-	}
-	if (line_total)
-	{
-		free (line_total);
-		line_total = NULL;
 	}
 	if (buf_len > line_len)
 	{
