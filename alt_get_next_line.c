@@ -59,7 +59,7 @@ void	line_move(char *buf, int line_len, int buf_len)
 	int	i;
 
 	i = 0;
-	while (line_len < buf_len && buf[i] != '\n')
+	while (line_len < buf_len)
 	{
 		buf[i] = buf[line_len + 1];
 		i++;
