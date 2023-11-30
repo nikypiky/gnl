@@ -4,15 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-int	alt_descriptor_test(int fd, char *buf)
-{
-	int	i;
-
-	i = (read(fd, buf, 0));
-	if (i < 0)
-		free (buf);
-	return(i);
-}
 size_t	ft_strlen(const char *c)
 {
 	size_t	i;
@@ -23,6 +14,32 @@ size_t	ft_strlen(const char *c)
 	return (i);
 }
 
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+{
+	size_t	i;
+
+	i = 0;
+	if (size == 0)
+		return (ft_strlen(src));
+	while (i <= size - 1 && src[i] != 0)
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = 0;
+	return (ft_strlen(src));
+}
+
+int	alt_descriptor_test(int fd, char *buf)
+{
+	int	i;
+
+	i = (read(fd, buf, 0));
+	if (i < 0)
+		free (buf);
+	return(i);
+}
+
 int get_line_len(char *buf)
 {
 	size_t	i;
@@ -30,10 +47,10 @@ int get_line_len(char *buf)
 	i = 0;
 	while ((buf[i] != '\n' && i < BUFFER_SIZE) && buf[i] != 0)
 		i++;
-	return (i);
+	return (i + 1);
 }
 
-size_t	ft_strlcat(char *dest, const char *src, size_t size)
+size_t	line_cat(char *dest, const char *src, size_t size)
 {
 	size_t	lens;
 	size_t	i;
@@ -60,27 +77,6 @@ size_t	ft_strlcat(char *dest, const char *src, size_t size)
 	return (lens + i);
 }
 
-size_t	line_cat(char *dest, char *src, size_t line_len_total, size_t line_len)
-{
-	/* size_t	lens; */
-	size_t	i;
-
-	/* lens = 0; */
-	i = 0;
-	/* while (lens < line_len_total) */
-	/* { */
-	/* 	dest++; */
-	/* 	lens++; */
-	/* } */
-	while (i <= line_len)// && *src != '\n')
-	{
-		dest[line_len_total] = src[i];
-		line_len_total++;
-		i++;
-	}
-	return (i);
-}
-
 void	line_move(char *buf, int line_len, int buf_len)
 {
 	int	i;
@@ -88,7 +84,7 @@ void	line_move(char *buf, int line_len, int buf_len)
 	i = 0;
 	while (line_len < buf_len)
 	{
-		buf[i] = buf[line_len + 1];
+		buf[i] = buf[line_len];
 		i++;
 		line_len++;
 	}
@@ -104,10 +100,10 @@ char	*buf_not_full(char *buf)
 	if (buf[0] == '\n')
 		line = (char *)malloc(sizeof(char) * 1);
 	else
-		line = (char *)malloc(sizeof(char) * line_len);
+		line = (char *)malloc(sizeof(char) * line_len + 1);
 	if (!line)
 		return (NULL);
-	line_cat(line, buf, 0, line_len);
+	ft_strlcpy(line, buf, line_len);
 	line_move(buf, line_len, ft_strlen(buf));
 	return (line);
 }
@@ -134,11 +130,11 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 			return (NULL);
 		if (line_total)
 		{
-			line_cat(line, line_total, 0, line_len_total);
+			line_cat(line, line_total, line_len_total);
 			free (line_total);
 			line_total = NULL;
 		}
-		line_cat(line, buf, line_len_total, line_len);
+		line_cat(line, buf, line_len_total + line_len + 1);
 	}
 	if (buf_len > line_len)
 	{
@@ -152,7 +148,6 @@ char	*alt_get_next_line(int fd)
 {
 	static char	*buf;
 	char		*line;
-	/* size_t		line_len; */
 
 	line = NULL;
 	if (!buf)
