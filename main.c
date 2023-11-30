@@ -14,7 +14,7 @@ int	main(void)
 	file = open("test.txt", O_RDWR);
 	/* i = read(file, s, 0); */
 	line_cat(x, y, 0, 6);
-	while (i < 5)
+	while (i < 6)
 	{
 		s = alt_get_next_line(file);
 		printf("%s", s);

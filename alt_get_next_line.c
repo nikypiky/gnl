@@ -33,25 +33,52 @@ int get_line_len(char *buf)
 	return (i);
 }
 
-size_t	line_cat(char *dest, char *src, size_t line_len_total, size_t line_len)
+size_t	ft_strlcat(char *dest, const char *src, size_t size)
 {
 	size_t	lens;
 	size_t	i;
 
-	lens = 0;
 	i = 0;
-	while (lens < line_len_total)
+	lens = ft_strlen(src);
+	if (!size)
+		return (lens);
+	while (*dest && size)
 	{
 		dest++;
-		lens++;
+		i++;
+		size--;
 	}
-	while (i <= line_len)// && *src != '\n')
+	while (*src && size > 1)
 	{
 		*dest++ = *src++;
-		lens++;
+		size--;
+	}
+	if (size != 0)
+	{
+		*dest = '\0';
+	}
+	return (lens + i);
+}
+
+size_t	line_cat(char *dest, char *src, size_t line_len_total, size_t line_len)
+{
+	/* size_t	lens; */
+	size_t	i;
+
+	/* lens = 0; */
+	i = 0;
+	/* while (lens < line_len_total) */
+	/* { */
+	/* 	dest++; */
+	/* 	lens++; */
+	/* } */
+	while (i <= line_len)// && *src != '\n')
+	{
+		dest[line_len_total] = src[i];
+		line_len_total++;
 		i++;
 	}
-	return (lens);
+	return (i);
 }
 
 void	line_move(char *buf, int line_len, int buf_len)
@@ -68,12 +95,16 @@ void	line_move(char *buf, int line_len, int buf_len)
 	buf[i] = 0;
 }
 
-char	*buf_not_full(char *buf, char *line)
+char	*buf_not_full(char *buf)
 {
 	size_t	line_len;
+	char	*line;
 
 	line_len = get_line_len(buf);
-	line = (char *)malloc(sizeof(char) * line_len);
+	if (buf[0] == '\n')
+		line = (char *)malloc(sizeof(char) * 1);
+	else
+		line = (char *)malloc(sizeof(char) * line_len);
 	if (!line)
 		return (NULL);
 	line_cat(line, buf, 0, line_len);
@@ -91,7 +122,7 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 	line = NULL;
 	if (buf_len < BUFFER_SIZE && buf_len != 0)
 	{
-		line = buf_not_full(buf, line);
+		line = buf_not_full(buf);
 		line_len = get_line_len(line);
 	}
 	else
