@@ -135,10 +135,11 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 			line_total = NULL;
 		}
 		line_cat(line, buf, line_len_total + line_len + 1);
+		if (buf_len > line_len)
+			line_move(buf, line_len, buf_len + 1);
 	}
 	if (buf_len > line_len)
 	{
-		line_move(buf, line_len, buf_len + 1);
 		return (line);
 	}
 	return (write_line(fd, buf, line, (line_len_total + line_len)));
