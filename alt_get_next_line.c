@@ -130,7 +130,7 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 			return (NULL);
 		if (line_total)
 		{
-			line_cat(line, line_total, line_len_total);
+			ft_strlcpy(line, line_total, line_len_total);
 			free (line_total);
 			line_total = NULL;
 		}
