@@ -124,7 +124,7 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 	else
 	{
 		buf_len = read(fd, buf, BUFFER_SIZE);
-		line_len = get_line_len(buf);
+		line_len = get_line_len(buf) - 1;
 		line = (char *)malloc(sizeof(char) * (line_len_total + line_len));
 		if (!line)
 			return (NULL);
