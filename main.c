@@ -13,7 +13,6 @@ int	main(void)
 	/* i = read(file, s, 0); */
 	while ((s = alt_get_next_line(file)) != NULL)
 	{
-		
 		printf("%s", s);
 		free (s);
 		i++;

@@ -30,6 +30,22 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	return (ft_strlen(src));
 }
 
+void	*ft_memchr(const void *s, int c, size_t n)
+{
+	size_t	i;
+	char	*str;
+
+	str = (char *)s;
+	i = 0;
+	while (i < n)
+	{
+		if (str[i] == c)
+			return (&str[i]);
+		i++;
+	}
+	return (NULL);
+}
+
 int	alt_descriptor_test(int fd, char *buf)
 {
 	int	i;
@@ -47,7 +63,7 @@ int get_line_len(char *buf)
 	i = 0;
 	while ((buf[i] != '\n' && i < BUFFER_SIZE) && buf[i] != 0)
 		i++;
-	return (i);
+	return (i + 1);
 }
 
 size_t	line_cat(char *dest, const char *src)
@@ -82,11 +98,11 @@ char	*buf_not_full(char *buf)
 	size_t	line_len;
 	char	*line;
 
-	line_len = get_line_len(buf) + 1;
+	line_len = get_line_len(buf);
 	if (buf[0] == '\n')
 		line = (char *)malloc(sizeof(char) * 1);
 	else
-		line = (char *)malloc(sizeof(char) * line_len + 1);
+		line = (char *)malloc(sizeof(char) * line_len);
 	if (!line)
 		return (NULL);
 	ft_strlcpy(line, buf, line_len);
@@ -105,7 +121,8 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 	if (buf_len < BUFFER_SIZE && buf_len != 0)
 	{
 		line = buf_not_full(buf);
-		line_len = get_line_len(line);
+		if (line[ft_strlen(line) == '\n'])
+			return(line);
 	}
 	else
 	{
@@ -113,7 +130,7 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 		if (!buf_len)
 			return(NULL);
 		buf[buf_len] = 0;
-		line_len = get_line_len(buf) + 1;
+		line_len = get_line_len(buf);
 		line = (char *)malloc(sizeof(char) * (line_len_total + line_len + 1));
 		if (!line)
 			return (NULL);
@@ -124,13 +141,7 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 			line_total = NULL;
 		}
 		line_cat(line, buf);
-		// if (buf_len > line_len)
-			line_move(buf, line_len, buf_len);
-		if (BUFFER_SIZE > buf_len)
-		{
-			buf = NULL;
-			return (line);
-		}
+		line_move(buf, line_len, buf_len);
 	}
 	if (buf_len > line_len)
 		return (line);
