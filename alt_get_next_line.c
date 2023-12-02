@@ -123,6 +123,11 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 		line_cat(line, buf);
 		if (buf_len > line_len)
 			line_move(buf, line_len, buf_len);
+		if (BUFFER_SIZE > buf_len)
+		{
+			buf = NULL;
+			return (line);
+		}
 	}
 	if (buf_len > line_len)
 		return (line);
