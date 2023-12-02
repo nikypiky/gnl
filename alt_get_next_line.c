@@ -50,31 +50,17 @@ int get_line_len(char *buf)
 	return (i);
 }
 
-size_t	line_cat(char *dest, const char *src, size_t size)
+size_t	line_cat(char *dest, const char *src)
 {
 	size_t	lens;
-	size_t	i;
 
-	i = 0;
 	lens = ft_strlen(src);
-	if (!size)
-		return (lens);
-	while (*dest && size)
-	{
+	while (*dest)
 		dest++;
-		i++;
-		size--;
-	}
-	while (*src && src[-1] != '\n' && size > 1)
-	{
+	while (*src && src[-1] != '\n')
 		*dest++ = *src++;
-		size--;
-	}
-	if (size != 0)
-	{
-		*dest = '\0';
-	}
-	return (lens + i);
+	*dest = '\0';
+	return (lens);
 }
 
 void	line_move(char *buf, int line_len, int buf_len)
@@ -134,14 +120,12 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 			free (line_total);
 			line_total = NULL;
 		}
-		line_cat(line, buf, line_len_total + line_len);
+		line_cat(line, buf);
 		if (buf_len > line_len)
 			line_move(buf, line_len, buf_len);
 	}
 	if (buf_len > line_len)
-	{
 		return (line);
-	}
 	return (write_line(fd, buf, line, (line_len_total + line_len)));
 }
 
@@ -155,6 +139,6 @@ char	*alt_get_next_line(int fd)
 		buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buf || alt_descriptor_test(fd, buf) == -1)
 		return (NULL);
-	line = write_line(fd, buf, line, 0);
-	return(line);
+	// line = write_line(fd, buf, line, 0);
+	return(write_line(fd, buf, line, 0));
 }
