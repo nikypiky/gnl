@@ -11,9 +11,9 @@ int	main(void)
 
 	file = open("test.txt", O_RDWR);
 	/* i = read(file, s, 0); */
-	while (i < 18)
+	while ((s = alt_get_next_line(file)) != NULL)
 	{
-		s = alt_get_next_line(file);
+		
 		printf("%s", s);
 		free (s);
 		i++;

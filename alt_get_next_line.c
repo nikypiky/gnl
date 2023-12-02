@@ -110,6 +110,9 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 	else
 	{
 		buf_len = read(fd, buf, BUFFER_SIZE);
+		if (!buf_len)
+			return(NULL);
+		buf[buf_len] = 0;
 		line_len = get_line_len(buf) + 1;
 		line = (char *)malloc(sizeof(char) * (line_len_total + line_len + 1));
 		if (!line)
@@ -121,7 +124,7 @@ char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 			line_total = NULL;
 		}
 		line_cat(line, buf);
-		if (buf_len > line_len)
+		// if (buf_len > line_len)
 			line_move(buf, line_len, buf_len);
 		if (BUFFER_SIZE > buf_len)
 		{
@@ -142,7 +145,7 @@ char	*alt_get_next_line(int fd)
 	line = NULL;
 	if (!buf)
 		buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
-	if (!buf || alt_descriptor_test(fd, buf) == -1)
+	if (!buf || alt_descriptor_test(fd, buf) < 0)
 		return (NULL);
 	// line = write_line(fd, buf, line, 0);
 	return(write_line(fd, buf, line, 0));
