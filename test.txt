@@ -1,9 +1,7 @@
-The strlcpy() and tes
+The strlcpy() and tested
 rings respectively. They are design
-ncluded in si
-
-e. Also note that strlcpy() and strlcat() only operate on true ''C'' strings. This means that for strlcpy() src must b
-
+included in si
+Also note that strlcpy() and strlcat() only operate on true ''C'' strings.
 NUL-terminated and for strlcat()
 both src and dst must be NUL-
- terminatedhhk.
+terminated.
