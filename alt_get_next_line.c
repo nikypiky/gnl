@@ -12,7 +12,7 @@ size_t	gnl_strlen(const char *c)
 	i = 0;
 	if (c)
 	{
-	while (c[i] != 0 || i < BUFFER_SIZE)
+	while (c[i] != 0)
 		i++;
 	}
 	return (i);
@@ -81,23 +81,24 @@ void	line_move(char *buf, int line_len, int buf_len)
 	buf[i] = 0;
 }
 
-char	*write_line(int fd, char *buf)
+char	*write_line(int fd, char *buf, char *line_collect, char *line_return)
 {
-	char	*line_collect;
-	char	*line_return;
-
 	while (1)
 	{
-		if (read(fd, buf, BUFFER_SIZE) <= 0)
-			return (NULL);
-		line_collect = malloc(sizeof(char) * (strlen(line_collect) + get_line_len(buf)));
+		if (gnl_strlen(buf) == 0)
+		{
+			if (read(fd, buf, BUFFER_SIZE) <= 0)
+				return (NULL);
+		}
+		line_collect = malloc(sizeof(char) * (gnl_strlen(line_collect) + get_line_len(buf)));
 		gnl_strlcpy(line_collect, line_return, gnl_strlen(line_return));
 		free (line_return);
+		line_cat(line_collect, buf);
 		line_move(buf, get_line_len(buf), gnl_strlen(buf));
 		line_return = malloc(sizeof(char) * strlen(line_collect));
 		strcpy(line_return, line_collect);
 		free (line_collect);
-		if (line_return[gnl_strlen(line_return)] == '\n')
+		if (line_return[gnl_strlen(line_return) - 1] == '\n')
 			return (line_return);
 	}
 }
@@ -105,11 +106,16 @@ char	*write_line(int fd, char *buf)
 char	*alt_get_next_line(int fd)
 {
 	static char	*buf;
+	char		*line_collect;
+	char		*line_return;
+
+	line_collect = NULL;
+	line_return = NULL;
 
 	if (!buf)
 		buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buf || alt_descriptor_test(fd, buf) < 0)
 		return (NULL);
-	// line = write_line(fd, buf, line, 0);
-	return(write_line(fd, buf));
+	*buf = 0;
+	return(write_line(fd, buf, line_collect, line_return));
 }
