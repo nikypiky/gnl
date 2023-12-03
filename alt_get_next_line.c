@@ -110,42 +110,47 @@ char	*buf_not_full(char *buf)
 	return (line);
 }
 
+char	*buf_full(int fd, char *buf, char *line_total, size_t line_len_total)
+{
+	size_t	buf_len;
+	size_t	line_len;
+	char	*line;
+
+	buf_len = read(fd, buf, BUFFER_SIZE);
+	if (!buf_len && !line_total)
+		return(NULL);
+	buf[buf_len] = 0;
+	line_len = get_line_len(buf);
+	line = (char *)malloc(sizeof(char) * (line_len_total + line_len + 1));
+	if (!line)
+		return (NULL);
+	if (line_total)
+	{
+		ft_strlcpy(line, line_total, ft_strlen(line_total));
+		free (line_total);
+		line_total = NULL;
+		line_cat(line, buf);
+	}
+	else
+		ft_strlcpy(line, buf, ft_strlen(buf));
+	line_move(buf, line_len, buf_len);
+	return (line);
+}
+
 char	*write_line(int fd, char *buf, char *line_total, size_t line_len_total)
 {
 	char		*line;
 	size_t		buf_len;
-	size_t		line_len;
 
 	buf_len = ft_strlen(buf);
 	line = NULL;
 	if (buf_len < BUFFER_SIZE && buf_len != 0)
-	{
 		line = buf_not_full(buf);
-		if (line[ft_strlen(line) == '\n'])
-			return(line);
-	}
 	else
-	{
-		buf_len = read(fd, buf, BUFFER_SIZE);
-		if (!buf_len)
-			return(NULL);
-		buf[buf_len] = 0;
-		line_len = get_line_len(buf);
-		line = (char *)malloc(sizeof(char) * (line_len_total + line_len + 1));
-		if (!line)
-			return (NULL);
-		if (line_total)
-		{
-			ft_strlcpy(line, line_total, line_len_total);
-			free (line_total);
-			line_total = NULL;
-		}
-		line_cat(line, buf);
-		line_move(buf, line_len, buf_len);
-	}
-	if (buf_len > line_len)
-		return (line);
-	return (write_line(fd, buf, line, (line_len_total + line_len)));
+		line = buf_full(fd, buf, line_total, line_len_total);
+	if (line[ft_strlen(line) - 1] == '\n')
+		return(line);
+	return (write_line(fd, buf, line, get_line_len(line)));
 }
 
 char	*alt_get_next_line(int fd)

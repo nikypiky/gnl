@@ -3,7 +3,5 @@ rings
 included in si
 Also note that strlcpy() and strlcat() only operate on true ''C'' strings.
 NUL-terminated and for strlcat()
-
-
 both src and dst must be NUL-
 terminated.
