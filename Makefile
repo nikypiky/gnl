@@ -6,7 +6,7 @@ files 	   = get_next_line \
 
 Compiler	= cc
 
-CmpFlags	= -Wall -Wextra -Werror
+CmpFlags	= -Wall -Wextra -Werror #-fsanitize=address
 
 NAME	= $(Library).a
 
@@ -14,7 +14,7 @@ CFILES	= $(files:%=%.c)
 
 OFILES	= $(files:%=%.o)
 
-BUFFER	= BUFFER_SIZE=10
+BUFFER	= BUFFER_SIZE=10000000
 
 all: $(NAME) run
 
