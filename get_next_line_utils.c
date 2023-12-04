@@ -7,8 +7,8 @@ size_t	gnl_strlen(const char *c)
 	i = 0;
 	if (c)
 	{
-	while (c[i] != 0)
-		i++;
+		while (c[i] != 0)
+			i++;
 	}
 	return (i);
 }
