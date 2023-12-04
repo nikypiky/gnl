@@ -1,8 +1,7 @@
 Library		= get_next_line
 
 files 	   = get_next_line \
-			get_next_line_utils\
-			alt_get_next_line\
+			get_next_line_utils \
 
 Compiler	= cc
 
@@ -14,7 +13,7 @@ CFILES	= $(files:%=%.c)
 
 OFILES	= $(files:%=%.o)
 
-BUFFER	= BUFFER_SIZE=10000
+BUFFER	= BUFFER_SIZE=1
 
 all: $(NAME) run
 

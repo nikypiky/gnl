@@ -10,10 +10,8 @@ int	main(void)
 	char	*s;
 
 	file = open("test.txt", O_RDWR);
-	/* i = read(file, s, 0); */
-	while ((s = alt_get_next_line(file)) != NULL)
+	while ((s = get_next_line(file)) != NULL)
 	{
-		
 		printf("%s", s);
 		free (s);
 		i++;
