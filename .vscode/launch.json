@@ -8,7 +8,7 @@
 			"name": "(gdb) Launch",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "/home/nikolas/42-projects/gnl/main",
+			"program": "/nfs/homes/nsilar/42projects/gnl/main",
 			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${fileDirname}",

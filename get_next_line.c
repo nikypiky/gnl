@@ -89,11 +89,16 @@ char	*get_next_line(int fd)
 	if (!buf)
 	{
 		buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+		if (!buf)
+		{
+			free (buf);
+			return (NULL);
+		}
 		*buf = 0;
 	}
-	if (!buf || read(fd, buf, 0) < 0)
+	// printf("read return = %zd\n", read(fd, buf, 0));
+	if (read(fd, buf, 0) < 0)
 	{
-		free (buf);
 		return (NULL);
 	}
 	return (write_line(fd, buf, line_get, line_return));

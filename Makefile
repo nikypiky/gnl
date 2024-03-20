@@ -13,7 +13,7 @@ CFILES	= $(files:%=%.c)
 
 OFILES	= $(files:%=%.o)
 
-BUFFER	= BUFFER_SIZE=1
+BUFFER	= BUFFER_SIZE=43
 
 all: $(NAME) run
 
