@@ -53,16 +53,21 @@ void	line_move(char *buf, int line_len, int buf_len)
 
 char	*write_line(int fd, char *buf, char *line_get, char *line_return)
 {
-	int	i;
+	static int	i;
 
 	while (1)
 	{
 		if (gnl_strlen(buf) == 0)
 		{
 			i = read(fd, buf, BUFFER_SIZE);
+			// printf("read buf = %d\n", i);
 			if (i == 0)
 				return (line_return);
 			buf[BUFFER_SIZE] = 0;
+		}
+		if (i < get_line_len(buf))
+		{
+			return (NULL);
 		}
 		line_get = malloc((gnl_strlen(line_return) + get_line_len(buf) + 2));
 		*line_get = 0;
@@ -96,7 +101,6 @@ char	*get_next_line(int fd)
 		}
 		*buf = 0;
 	}
-	// printf("read return = %zd\n", read(fd, buf, 0));
 	if (read(fd, buf, 0) < 0)
 	{
 		return (NULL);
