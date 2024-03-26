@@ -60,15 +60,12 @@ char	*write_line(int fd, char *buf, char *line_get, char *line_return)
 		if (gnl_strlen(buf) == 0)
 		{
 			i = read(fd, buf, BUFFER_SIZE);
-			// printf("read buf = %d\n", i);
 			if (i == 0)
 				return (line_return);
 			buf[BUFFER_SIZE] = 0;
 		}
-		if (i < get_line_len(buf))
-		{
-			return (NULL);
-		}
+		if (i < BUFFER_SIZE)
+			buf[i] = 0;
 		line_get = malloc((gnl_strlen(line_return) + get_line_len(buf) + 2));
 		*line_get = 0;
 		gnl_strlcpy(line_get, line_return, gnl_strlen(line_return));
@@ -78,7 +75,36 @@ char	*write_line(int fd, char *buf, char *line_get, char *line_return)
 		line_return = malloc(sizeof(char) * (gnl_strlen(line_get) + 1));
 		strcpy(line_return, line_get);
 		free (line_get);
-		if (line_return[gnl_strlen(line_return) - 1] == '\n')
+		if (line_return[gnl_strlen(line_return) - 1] == '\n' || line_return[gnl_strlen(line_return) - 1] == 0)
+			return (line_return);
+	}
+}
+
+buf_size_1_write_line(int fd, char *buf, char *line_get, char *line_return)
+{
+	int	i;
+
+	i = 0;
+	while (1)
+	{
+		line_get = (char *)malloc(sizeof(char) * (10 + i));
+		while (line_get[i] != '\n' || line_get[i] != 0)
+		{
+			read(fd, line_get, BUFFER_SIZE);
+			i++;
+		}
+		
+
+
+		*line_get = 0;
+		gnl_strlcpy(line_get, line_return, gnl_strlen(line_return));
+		free (line_return);
+		line_cat(line_get, buf);
+		line_move(buf, get_line_len(buf) + 1, gnl_strlen(buf));
+		line_return = malloc(sizeof(char) * (gnl_strlen(line_get) + 1));
+		strcpy(line_return, line_get);
+		free (line_get);
+		if (line_return[gnl_strlen(line_return) - 1] == '\n' || line_return[gnl_strlen(line_return) - 1] == 0)
 			return (line_return);
 	}
 }
