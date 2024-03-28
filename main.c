@@ -10,9 +10,10 @@ int	main(void)
 	char	*s;
 
 	file = open("test.txt", O_RDWR);
-	while ((s = get_next_line(file)) != NULL)
+	while (i != 5)
 	{
-		printf("%s", s);
+		s = get_next_line(file);
+		printf("x - %s", s);
 		free (s);
 		i++;
 	}

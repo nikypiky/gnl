@@ -90,13 +90,14 @@ char	*buf_size_1_write_line(int fd, int len_old_line, char *old_line)
 	*new_line = 0;
 	if (old_line)
 		gnl_strlcpy(new_line, old_line, len_old_line);
-	while(new_line[len_old_line + i] != '\n')
+	while(new_line[i - 1] != '\n')
 	{
 		if (read(fd, &new_line[i], BUFFER_SIZE) == 0)
 			return (new_line);
 		i++;
+		// printf("%c\n", new_line[i - 1]);
 	}
-	if (new_line[len_old_line + i] == '\n')
+	if (new_line[i - 1] == '\n')
 	{
 		new_line[i] = 0;
 		return (new_line);
@@ -127,6 +128,6 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	if (BUFFER_SIZE == 1)
-		return (buf_size_1_write_line(fd, 100, line_return));
+		return (buf_size_1_write_line(fd, 10, line_return));
 	return (write_line(fd, buf, line_get, line_return));
 }
