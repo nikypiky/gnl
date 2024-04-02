@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nsilar <nsilar@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/02 17:11:39 by nsilar            #+#    #+#             */
+/*   Updated: 2024/04/02 17:16:47 by nsilar           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 int	get_line_len(char *buf)
@@ -54,6 +66,7 @@ void	line_move(char *buf, int line_len, int buf_len)
 char	*write_line(int fd, char *buf, char *line_get, char *line_return)
 {
 	static int	i;
+	// int			j;
 
 	while (1)
 	{
@@ -75,35 +88,36 @@ char	*write_line(int fd, char *buf, char *line_get, char *line_return)
 		line_return = malloc(sizeof(char) * (gnl_strlen(line_get) + 1));
 		strcpy(line_return, line_get);
 		free (line_get);
-		if (line_return[gnl_strlen(line_return) - 1] == '\n' || line_return[gnl_strlen(line_return) - 1] == 0)
+		// j = ;
+		if (line_return[gnl_strlen(line_return) - 1] == '\n')
 			return (line_return);
 	}
 }
 
-char	*buf_size_1_write_line(int fd, int len_old_line, char *old_line)
-{
-	int		i;
-	char	*new_line;
+// char	*buf_size_1_write_line(int fd, int len_old_line, char *old_line)
+// {
+// 	int		i;
+// 	char	*new_line;
 
-	i = 0;
-	new_line = (char *)malloc(sizeof(char) * len_old_line * 2);
-	*new_line = 0;
-	if (old_line)
-		gnl_strlcpy(new_line, old_line, len_old_line);
-	while(new_line[i - 1] != '\n')
-	{
-		if (read(fd, &new_line[i], BUFFER_SIZE) == 0)
-			return (new_line);
-		i++;
-		// printf("%c\n", new_line[i - 1]);
-	}
-	if (new_line[i - 1] == '\n')
-	{
-		new_line[i] = 0;
-		return (new_line);
-	}
-	return (buf_size_1_write_line(fd, len_old_line * 2, new_line));
-}
+// 	i = 0;
+// 	new_line = (char *)malloc(sizeof(char) * len_old_line * 2);
+// 	*new_line = 0;
+// 	if (old_line)
+// 		gnl_strlcpy(new_line, old_line, len_old_line);
+// 	while(new_line[i - 1] != '\n')
+// 	{
+// 		if (read(fd, &new_line[i], BUFFER_SIZE) == 0)
+// 			return (new_line);
+// 		i++;
+// 		// printf("%c\n", new_line[i - 1]);
+// 	}
+// 	if (new_line[i - 1] == '\n')
+// 	{
+// 		new_line[i] = 0;
+// 		return (new_line);
+// 	}
+// 	return (buf_size_1_write_line(fd, len_old_line * 2, new_line));
+// }
 
 char	*get_next_line(int fd)
 {
@@ -127,7 +141,7 @@ char	*get_next_line(int fd)
 	{
 		return (NULL);
 	}
-	if (BUFFER_SIZE == 1)
-		return (buf_size_1_write_line(fd, 10, line_return));
+	// if (BUFFER_SIZE == 1)
+	// 	return (buf_size_1_write_line(fd, 10, line_return));
 	return (write_line(fd, buf, line_get, line_return));
 }
