@@ -1,21 +1,21 @@
-#include <stdio.h>
 #include <fcntl.h>
-#include <string.h>
+#include <stdio.h>
 #include "get_next_line.h"
 
-int	main(void)
+int main(void)
 {
-	int		file;
-	int		i = 0;
-	char	*s;
+	int fd = open("test.txt", O_RDONLY);
+	char *line;
 
-	file = open("test.txt", O_RDWR);
-	while (i != 5)
+	if (fd == -1)
+		return (1);
+
+	while ((line = get_next_line(fd)))
 	{
-		s = get_next_line(file);
-		printf("x - %s", s);
-		free (s);
-		i++;
+		printf("%s", line);
+		free(line);
 	}
-	close(file);
+
+	close(fd);
+	return (0);
 }
